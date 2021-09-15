@@ -1,0 +1,110 @@
+const copy = (text: string) => {
+  let transfer = document.createElement("input");
+  document.body.appendChild(transfer);
+  transfer.value = text;
+  transfer.select();
+  if (document.execCommand("copy")) {
+    document.execCommand("copy");
+  }
+  document.body.removeChild(transfer);
+};
+const clamp = (target: number, min: number, max: number) => {
+  if (target < min) {
+    return min;
+  } else if (target > max) {
+    return max;
+  }
+  return target;
+};
+const isWX = () => {
+  const wx = navigator.userAgent.toLowerCase();
+  if ((wx as any).match(/MicroMessenger/i) == "micromessenger") {
+    return true;
+  }
+  return false;
+};
+const isAndroid = () => {
+  const android = navigator.userAgent;
+  if (android.indexOf("Android") > -1 || android.indexOf("Adr") > -1) {
+    return true;
+  }
+  return false;
+};
+const isIos = () => {
+  const ios = navigator.userAgent;
+  if (!!ios.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
+    return true;
+  }
+  return false;
+};
+
+const callPhoneNumber = (phoneNumber: string) => {
+  window.location.href = "tel:" + phoneNumber;
+};
+
+const transformFetchParamsInGet = (params: { [key: string]: any }) => {
+  let result = "?";
+  for (const key in params) {
+    if ((params.prototype || params).hasOwnProperty.call(params, key)) {
+      result =
+        result +
+        `${key}=${params[key]}` +
+        (Object.keys(params)[Object.keys(params).length - 1] == key ? "" : "&");
+    }
+  }
+  return result;
+};
+const getUrlParam = (name: string) => {
+  const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+  const r = window.location.search.substr(1).match(reg);
+  if (r != null) return unescape(r[2]);
+  return null;
+};
+
+const getUUID = () => {
+  const url = URL.createObjectURL(new Blob([]));
+  // const uuid = url.split("/").pop();
+  const uuid = url.substring(url.lastIndexOf("/") + 1);
+  URL.revokeObjectURL(url);
+  return uuid;
+};
+
+const humpToUnderline = (str: string) => {
+  return str.replace(/([A-Z])/g, "_$1").toLowerCase();
+};
+const underlineToHump = (str: string) => {
+  const a = str.split("_");
+  let result = a[0];
+  for (var i = 1; i < a.length; i++) {
+    result = result + a[i].slice(0, 1).toUpperCase() + a[i].slice(1);
+  }
+  return result;
+};
+const back = () => {
+  (window as any).Android.backApp();
+};
+
+function utf8ToB64(str: string) {
+  return window.btoa(unescape(encodeURIComponent(str)));
+}
+
+function b64ToUtf8(str: string) {
+  return decodeURIComponent(escape(window.atob(str)));
+}
+
+export {
+  utf8ToB64,
+  b64ToUtf8,
+  underlineToHump,
+  humpToUnderline,
+  getUrlParam,
+  back,
+  transformFetchParamsInGet,
+  callPhoneNumber,
+  isWX,
+  isAndroid,
+  isIos,
+  copy,
+  clamp,
+  getUUID,
+};

@@ -1,14 +1,26 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.tsx",
-  output: { path: path.join(__dirname, "build"), filename: "index.bundle.js" },
-  mode: process.env.NODE_ENV || "development",
+  output: { path: path.join(__dirname, "build"), filename: "index.js" },
+  mode: process.env.NODE_ENV === "production" ? "production" : "development",
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },
-  devServer: { contentBase: path.join(__dirname, "src") },
+  devServer: {
+    static: path.join(__dirname, "src"),
+    proxy: {
+      "/api": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        pathRewrite: {
+          "/api": "",
+        },
+      },
+    },
+  },
   module: {
     rules: [
       {
@@ -57,7 +69,9 @@ module.exports = {
     ],
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
+      title: "react-template-ts",
       template: path.join(__dirname, "index.html"),
     }),
   ],

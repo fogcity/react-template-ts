@@ -91,8 +91,32 @@ function utf8ToB64(str: string) {
 function b64ToUtf8(str: string) {
   return decodeURIComponent(escape(window.atob(str)));
 }
-
+function debounce(callback: () => void, delay: number) {
+  let timer;
+  if (timer) {
+    clearTimeout(timer);
+  }
+  timer = setTimeout(() => {
+    callback();
+    timer = null;
+  }, delay);
+}
+function isPC() {
+  return !(isAndroid() && isWX() && isIos());
+}
+function isBrowerDarkMode() {
+  return (
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  );
+}
+function isObject(item: any) {
+  return item && typeof item === "object" && item.constructor === Object;
+}
 export {
+  isBrowerDarkMode,
+  isObject,
+  debounce,
   utf8ToB64,
   b64ToUtf8,
   underlineToHump,
@@ -101,6 +125,7 @@ export {
   back,
   transformFetchParamsInGet,
   callPhoneNumber,
+  isPC,
   isWX,
   isAndroid,
   isIos,
